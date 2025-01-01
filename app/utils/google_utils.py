@@ -6,7 +6,8 @@ def fact_check(news_to_check: str):
     model_prompt = "Convert the statement '' to True or False. Give a single word as 'True' or 'False'."
     is_fake_news = False
     try:
-        claims: ClaimSearch = service.claims().search(query=news_to_check)
+        claims_resource = service.claims()
+        claims: ClaimSearch = claims_resource.search(query=news_to_check)
         # for now let's check only the first page
         # also assuming that the results are actually relevant
         for claim in claims.claims:
