@@ -1,6 +1,7 @@
 import importlib
+import json
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
 
 from app.params import fact_check_apis
 
@@ -13,5 +14,8 @@ def fact_check(news_to_check: str):
     # checking which api gave different result? etc.
     for api in fact_check_apis:
         api_utils = importlib.import_module(f"app.utils.{api}_utils")
-        is_fake_news = is_fake_news or api_utils.fact_check(news_to_check)
-    return is_fake_news
+        is_fake_news, fact_source = is_fake_news or api_utils.fact_check(news_to_check)
+    return Response(content=json.dumps({
+        is_fake_news: is_fake_news,
+        fact_source: fact_source
+    }))
